@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const User = require("../../models/user");
-const Code = require("../../models/code")
+const Code = require("../../models/code");
 var nodemailer = require("nodemailer");
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -76,7 +76,7 @@ exports.createUser = (req, res) => {
                 if (err) { return res.status(500).json({ msg: err.message }); }
                 res.status(200).json({
                                 user_id:user._id,
-                                token: token,
+                                // token: token,
                                 message:`verification mail sent to ${user.email}`
                             });
             });
@@ -109,7 +109,7 @@ exports.confirmationCode =  function (req, res) {
 
             user.save(function (err) {
                 if (err) { return res.status(500).json({ message: err.message }); }
-                res.status(200).send("The account has been verified. Please log in.");
+                res.status(200).json({message:"The account has been verified. Please log in."});
             });
         });
     });
@@ -121,15 +121,16 @@ exports.resendCode = function (req, res) {
         if (!user) return res.status(400).json({ error: 'We were unable to find a user with that email.' });
         if (user.email_verification.status=='verified') return res.status(400).json({ error: 'This account has already been verified. Please log in.'});
  
-        // Create a verification code, save it, and send email
-        var code = new Code({ user_Id: user._id, token: crypto.randomBytes(16).toString('hex')});
- 
+        
+        Code.findOne({ user_id: user._Id }, function (err, code) {
+            // Create a verification code, save it, and send email
+        var code_new = crypto.randomBytes(16).toString('hex');
+            code.code = code_new;
         // Save the code
         code.save(function (err) {
             if (err) { return res.status(500).json({ error: err.message }); }
- 
+        });
             // Send the email
-            // sending mail
              var transporter = nodemailer.createTransport({
               host: "smtp.mailtrap.io",
               port: 2525,
@@ -146,7 +147,7 @@ exports.resendCode = function (req, res) {
                 if (err) { return res.status(500).json({ msg: err.message }); }
                 res.status(200).json({
                                 user_id:user._id,
-                                token: token,
+                                // token: token,
                                 message:`verification mail sent to ${user.email}`
                             });
             });
