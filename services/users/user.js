@@ -10,6 +10,7 @@ var expressJwt = require("express-jwt");
 var crypto = require("crypto");
 const { check, validationResult } = require("express-validator");
 
+// signup user
 exports.createUser = (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -76,7 +77,6 @@ exports.createUser = (req, res) => {
                 if (err) { return res.status(500).json({ msg: err.message }); }
                 res.status(200).json({
                                 user_id:user._id,
-                                // token: token,
                                 message:`verification mail sent to ${user.email}`
                             });
             });
@@ -86,6 +86,7 @@ exports.createUser = (req, res) => {
     })
 };
 
+// check the confirmation code for verification
 exports.confirmationCode =  function (req, res) {
     // increment the attempts made by user
     User.findOne({email: req.body.email },async function (err, user) {
@@ -115,6 +116,7 @@ exports.confirmationCode =  function (req, res) {
     });
 };
 
+// resend the verification code
 exports.resendCode = function (req, res) {
  
     User.findOne({ email: req.body.email }, function (err, user) {
@@ -147,7 +149,6 @@ exports.resendCode = function (req, res) {
                 if (err) { return res.status(500).json({ msg: err.message }); }
                 res.status(200).json({
                                 user_id:user._id,
-                                // token: token,
                                 message:`verification mail sent to ${user.email}`
                             });
             });

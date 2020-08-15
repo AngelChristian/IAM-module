@@ -28,6 +28,7 @@ It returns the following:
     "message": "verification mail sent to ..."
 }
 ```
+![example](https://res.cloudinary.com/angelchristian/image/upload/v1597317752/mail_f4a287.png)
 
 
 #### POST `/api/v1/signup/confirmation`
@@ -66,12 +67,23 @@ It returns the following:
     "message": "verification mail sent to ..."
 }
 ```
+#### GET `/debug-sentry`
+
+You can do a GET to `/debug-sentry` to test your sentry error tracking is working.
+
+It reports the following in your sentry console:
+![example](https://res.cloudinary.com/angelchristian/image/upload/v1597318199/sentry_pwvi24.png)
+
 
 ## Running it
 
 Just clone the repository, run `npm install` and then `node server.js`. That's it :).
 
 If you want to run it on another port, just run `PORT=3000 node index.js` to run it on port 3000 
+
+## Testing it
+
+Just run `npm test`
 
 
 ## Author
@@ -82,6 +94,5 @@ If you want to run it on another port, just run `PORT=3000 node index.js` to run
 
 Postman provides a powerful GUI platform to make your API development faster & easier, from building API requests through testing, documentation and sharing
 
-Here is a [small collection](https://documenter.getpostman.com/view/3232248/auth0-nodejs-jwt-auth/7LnAi4o) to highlight the features of this sample API.
 
 [![Run NodeJS JWT Authentication in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/c57ddc507592c436662c)

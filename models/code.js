@@ -1,3 +1,4 @@
+// verification code
 var mongoose = require("mongoose");
 
 const codeSchema = new mongoose.Schema({

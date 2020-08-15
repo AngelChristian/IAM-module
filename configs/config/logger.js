@@ -3,7 +3,7 @@ const winston = require('winston');
 // Logger configuration
 const logConfiguration = {
     'transports': [
-        // to log into file
+        //uncomment to log into file
         // new winston.transports.File({
         //     filename: './logs/data.log',
         //      format: winston.format.combine(

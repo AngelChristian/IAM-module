@@ -8,8 +8,6 @@ var userSchema = new mongoose.Schema(
       type: String,
       maxlength: 32,
       trim: true,
-      unique: true,
-      partialFilterExpression: {username: {$type: "string"}}
     },
     firstname: {
       type: String,
@@ -39,12 +37,7 @@ var userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, "password is required"],
-      // match : [
-      //       new RegExp('/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?/~_+-=|\]){8,32}$/','i'), // allow alphabets
-      //       'Name should have alphabets and spaces'
-      //   ]
-      // match: [/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/, 'Password should contain 8-32 characters having atleast one uppercase,lowercase and number digit']
-    },
+        },
     mobile_number: {
       code: {
         type: Number,
