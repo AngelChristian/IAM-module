@@ -7,6 +7,7 @@ const saltRounds = 10;
 require('dotenv').config();
 var jwt = require("jsonwebtoken");
 var expressJwt = require("express-jwt");
+const cookieParser = require("cookie-parser");
 var crypto = require("crypto");
 const { check, validationResult } = require("express-validator");
 
@@ -16,6 +17,7 @@ exports.createUser = (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(422).json({ error:  errors.array()[0].msg });
     }
+    if(req.body.password==req.body.passwordConfirmation){
 
     bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
 
@@ -23,6 +25,8 @@ exports.createUser = (req, res) => {
             email: req.body.email,
             password: hash,
             user_role: req.body.user_role,
+             referral: req.body.referral || null,
+            utm: req.body.utm || null,
         });
         user.save((err, user) => {
             if (err || !user) {
@@ -50,7 +54,7 @@ exports.createUser = (req, res) => {
             });
             // store token in cookie
             res.cookie("token", token, {
-                maxAge: 3600000
+                maxAge: 3600000,httpOnly:true
             });
             //register code generation
             var code = new Code({ user_Id: user._id, code: crypto.randomBytes(16).toString('hex') });
@@ -77,13 +81,21 @@ exports.createUser = (req, res) => {
                 if (err) { return res.status(500).json({ msg: err.message }); }
                 res.status(200).json({
                                 user_id:user._id,
-                                message:`verification mail sent to ${user.email}`
+                                message:`verification mail sent to ${user.email}`,
+                                usr_role:user.user_role,
+                                relevance:user.relevance
                             });
             });
         }
         });
 
     })
+}
+else{
+    res.status(400).json({
+        error: "password doesn't match with confirm password"
+    });
+}
 };
 
 // check the confirmation code for verification
@@ -156,3 +168,50 @@ exports.resendCode = function (req, res) {
  
     });
 };
+
+
+// login api
+exports.login = function (req, res) {
+    const {email,password} = req.body;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res
+        .status(422)
+        .json({ error: errors.array()[0].msg, field: errors.array()[0].param });
+    }
+
+    User.findOne({ email }, (err, user) => {
+      if (err || !user) {
+        return res.status(400).json({
+          error: "email does not exist",
+        });
+      }
+
+      bcrypt.compare(password, user.password, function (err, result) {
+        if(result){
+
+        // create token
+        var token = jwt.sign({ _id: user._id }, process.env.SECRET);
+        // put token in cookie
+        res.cookie("token", token, {
+          maxAge: 3600000,
+          httpOnly: true,
+        });
+
+        return res.json({
+            user_id: user._id,
+            token: token,
+            user_role: user.user_role,
+            relevance: user.relevance,
+            user_status:user.email_verification.status
+
+        });
+    }
+    else{
+         return res.json({ error:"email and password doesnt match" });
+    }
+      });
+    });
+    
+
+}

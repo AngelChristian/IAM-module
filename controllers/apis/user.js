@@ -3,7 +3,7 @@ const userService = require('../../services/users/user');
 const { check, validationResult } = require("express-validator");
 let router = express.Router();
 
-router.post('/',[
+router.post('/signup', [
     check("password").isLength({
       min: 8,
       max: 32
@@ -12,6 +12,10 @@ router.post('/',[
   ] ,userService.createUser);
 router.post("/confirmation", userService.confirmationCode);
 router.post("/resend", userService.resendCode);
+router.post("/login", [
+    check("email").isEmail().withMessage("please enter a valid Email"),
+    check("password").isLength({ min: 1 }).withMessage("Password is required"),
+  ] , userService.login);
 
 
 module.exports = router;

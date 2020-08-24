@@ -67,12 +67,34 @@ It returns the following:
     "message": "verification mail sent to ..."
 }
 ```
+
+
 #### GET `/debug-sentry`
 
 You can do a GET to `/debug-sentry` to test your sentry error tracking is working.
 
 It reports the following in your sentry console:
 ![example](https://res.cloudinary.com/angelchristian/image/upload/v1597318199/sentry_pwvi24.png)
+
+#### POST `/api/v1/login`
+
+You can do a POST to `/api/v1/login` to create a new user.
+
+The body must have:
+
+* `email`: The email
+* `password`: The password
+
+It returns the following:
+
+```json
+{
+    "user_id": "...",
+    "token": "...",
+    "user_role": "...",
+    "user_status": "..."
+}
+```
 
 
 ## Running it

@@ -87,6 +87,16 @@ var userSchema = new mongoose.Schema(
         type: Number,
       },
     },
+    Relevance: {
+
+        modules: [{
+              type: String,
+              enum: ["job_portol", "lms", "news_portal"],
+            }
+        ]
+      },
+
+    UTM: { type: mongoose.Schema.Types.ObjectId, ref: 'Utm' },
     user_role: {
       type: String,
       enum: [
